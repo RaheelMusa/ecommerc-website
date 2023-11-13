@@ -72,8 +72,8 @@ try {
   }
   const handleResetFilter = () => {
    setRating("")
-  //  setMinPrice("")
-  //  setMaxPrice("")
+   setMinPrice("")
+   setMaxPrice("")
   }
   useEffect(() => {
     fetchProduct();

@@ -11,15 +11,14 @@ const PricePage = ({ onPriceFilterApply, onResetFilter }) => {
         setMaxPrice(newMaxPrice)
     }
     const handleFilterApply = () => {
-        
-        if(isNaN(min) || isNaN(max)){
-                setMaxPrice('')
-                setMinPrice('')
+            if(minPrice === '' && maxPrice === ''){
+                onResetFilter()
             }
-            else{
-                
-                onPriceFilterApply(minPrice, maxPrice)
+        else{
+
+            onPriceFilterApply(minPrice, maxPrice)
         }
+                
        
     }
     

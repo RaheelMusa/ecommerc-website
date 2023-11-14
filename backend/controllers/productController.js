@@ -29,8 +29,6 @@ exports.getProduct = async (req, res, next) => {
         filter.rating = rating
     }
  
-    
-   
     const skip = (page - 1) * pageSize
     const totalProduct = await productModel.countDocuments(filter)
     // const  = await productModel.countDocuments(filter)

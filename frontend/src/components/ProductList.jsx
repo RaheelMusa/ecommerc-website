@@ -16,7 +16,6 @@ const ProductList = () => {
   const [category, setCategory] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const [selectedPriceRange, setSelectedPriceRange] = useState("")
 
   const handlePageChange = (newPage) => {
     setPage(newPage);

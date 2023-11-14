@@ -5,11 +5,13 @@ export default function Home() {
   return (
     <>
       <div className="scroll-smooth">
-        <div className=" bg-[url('/hero.jpg')] object-cover md:h-[700px] w-auto h-[400px] bg-cover bg-no-repeat relative">
+        <div className=" bg-[url('/hero.jpg')] object-cover object-center md:h-[700px] w-auto  bg-cover bg-no-repeat relative">
           <div className="absolute md:top-48 md:left-48 top-32 left-20 ">
             <p className="md:text-xl text-sm md:mb-10 mb-5">New Arrivals</p>
-            <h2 className="font-bold md:my-10 my-3 text-6xl">Coat Hoody</h2>
-            <button className="hover:text-red-500 border-b-2 border-solid duration-500 border-black md:text-2xl">
+            <h2 className="font-bold md:my-10 my-3 md:text-6xl text-2xl">
+              Coat Hoody
+            </h2>
+            <button className="hover:text-red-500 text-xl border-b-2 border-solid duration-500 border-black md:text-2xl">
               Discover Now
             </button>
           </div>
@@ -24,7 +26,7 @@ export default function Home() {
               className="hover:scale-110 md:w-[500px] w-full md:h-auto object-cover h-[300px] duration-300"
             />
             <div className="absolute  top-10 left-5 ">
-              <h4 className="md:text-3xl text-4xl  font-semibold">
+              <h4 className="md:text-3xl text-2xl  font-semibold">
                 Clothing.No18
               </h4>
               <p className="text-gray-400">Sale Off 20% All Store</p>
@@ -37,7 +39,7 @@ export default function Home() {
               className="hover:scale-110 md:w-[800px] object-cover h-auto w-full my-2  md:h-[440px] duration-300"
             />
             <div className="absolute top-10 left-5 ">
-              <h4 className="md:text-3xl text-4xl font-semibold">
+              <h4 className="md:text-3xl text-2xl font-semibold">
                 Men’s Summer Sneaker
               </h4>
               <p className="text-gray-400">Big Sale Off This Week</p>
@@ -50,7 +52,7 @@ export default function Home() {
               className="hover:scale-110 w-full  md:w-[500px] md:h-auto object-cover h-[300px]"
             />
             <div className="block absolute top-10 left-5 text-center ">
-              <h4 className="md:text-3xl text-4xl font-semibold">Bag.No1</h4>
+              <h4 className="md:text-3xl text-2xl font-semibold">Bag.No1</h4>
               <p className="text-gray-400">Big Sale No Limited</p>
             </div>
           </div>
@@ -85,7 +87,7 @@ export default function Home() {
                 nihil impedit quo minus id quod maxime placeat facere possimus,
                 omnis voluptas assumenda est, omnis dolor repellendus.
               </p>
-              <button className="bg-red-500 rounded-lg px-2 py-3 hover:text-white hover:bg-black text-white duration-500 text-2xl">
+              <button className="bg-red-500 rounded-lg px-2 ms:py-3 py-2 hover:text-white hover:bg-black text-white duration-500 md:text-2xl text-xl">
                 Add to cart
               </button>
             </div>
@@ -96,10 +98,8 @@ export default function Home() {
 
         <div className="my-10">
           <div className="text-center mb-10">
-            <h1 className="md:text-6xl text-md mb-3 font-semibold">
-              New Arrivals
-            </h1>
-            <p className="text-gray-500 md:text-xl">
+            <h1 className="md:text-6xl text-lg mb-3 font-bold">New Arrivals</h1>
+            <p className="text-gray-500 text-base md:text-xl">
               Consequat magna massa vel suspendisse morbi aliquam faucibus
               ligula ante ipsum ac nulla.
             </p>
@@ -244,18 +244,30 @@ export default function Home() {
           </div>
         </div>
       </div>
-        <div className="bg-[url('/10019.jpg')] text-white h-[600px] text-center bg-no-repeat bg-cover bg-center my-10 w-full flex justify-center items-center">
-        <div className="flex flex-col gap-5">
-          <h2 className="text-4xl font-semibold">Join Our Newsletter Now</h2>
-          <h2 className="text-4xl font-semibold">Up to 70% OFF. All Sales are final</h2>
-          <p className="text-md">Subcribe to Beeta mailing list to receive update on new arrivals, special offers and other discount information.</p>
+      <div className="bg-[url('/10019.jpg')] text-white h-[600px] text-center bg-no-repeat bg-cover bg-center my-10 w-full flex justify-center items-center">
+        <div className="flex flex-col gap-5 px-3">
+          <h2 className="md:text-4xl text-2xl  font-semibold">
+            Join Our Newsletter Now
+          </h2>
+          <h2 className="md:text-4xl text-2xl font-semibold">
+            Up to 70% OFF. All Sales are final
+          </h2>
+          <p className="md:text-lg text-base">
+            Subcribe to Beeta mailing list to receive update on new arrivals,
+            special offers and other discount information.
+          </p>
           <div className="flex  items-center relative">
-
-          <input type="search" placeholder="Search here"  className="w-full py-3 mt-2 px-3 rounded-md outline-none text-black shadow-sm"/>
-          <button className="bg-black text-white py-3 rounded-md px-4 absolute right-0 mt-2">Search</button>
+            <input
+              type="search"
+              placeholder="Search here"
+              className="w-full py-3 mt-2 px-3 rounded-md outline-none text-black shadow-sm"
+            />
+            <button className="bg-black text-white py-3 rounded-md px-4 absolute right-0 mt-2">
+              Search
+            </button>
           </div>
         </div>
-        </div>
+      </div>
     </>
   );
 }

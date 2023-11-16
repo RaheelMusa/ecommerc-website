@@ -16,6 +16,7 @@ const ProductList = () => {
   const [category, setCategory] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -34,7 +35,9 @@ const ProductList = () => {
   //   setRating(selectRating);
   // };
   const fetchProduct = async () => {
-    const params = { page, pageSize, category, from: minPrice, to: maxPrice };
+    setIsLoading(true)
+    try {
+      const params = { page, pageSize, category, from: minPrice, to: maxPrice };
 
     if (rating) {
       params.rating = rating;
@@ -46,6 +49,13 @@ const ProductList = () => {
     console.log(data.data.user);
     setProduct(user);
     setTotalpages(totalPages);
+      
+    } catch (error) {
+      console.log("Error fetching Product:", error)
+    } finally{
+      setIsLoading(false)
+    }
+    
   };
 
   const removeProduct = async (_id) => {
@@ -111,17 +121,16 @@ const ProductList = () => {
             category={category}
           />
         </div>
+        
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 px-5">
-          {product
-            .filter((productList) =>
-              length === 0 ? true : category.includes(productList.category)
-            )
-            .map((productList) => {
+        
+          {isLoading ? (<p className="absolute top-[60%] left-[50%] text-8xl font-bold">Loading product...</p>) :( product.map((productList) => {
               return (
                 <div
-                  key={productList._id}
-                  className="border p-5 flex flex-col gap-3"
+                key={productList._id}
+                className="border p-5 flex flex-col gap-3"
                 >
+                 
                   {true ? (
                     <img
                       src={productList.image}
@@ -161,7 +170,7 @@ const ProductList = () => {
                   </button>
                 </div>
               );
-            })}
+            }))}
         </div>
         <div className="flex items-center justify-center my-3">
           <button

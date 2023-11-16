@@ -6,7 +6,7 @@ export default function Home() {
     <>
       <div className="scroll-smooth">
         <div className=" bg-[url('/hero.jpg')] object-cover object-center md:h-[700px] w-auto  bg-cover bg-no-repeat relative">
-          <div className="absolute md:top-48 md:left-48 top-32 left-20 ">
+          <div className="md:absolute md:top-48 md:left-48 h-96 top-48 ">
             <p className="md:text-xl text-sm md:mb-10 mb-5">New Arrivals</p>
             <h2 className="font-bold md:my-10 my-3 md:text-6xl text-2xl">
               Coat Hoody

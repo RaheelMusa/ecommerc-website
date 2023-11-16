@@ -1,6 +1,8 @@
 "use client";
+import axios from "axios";
 import Link from "next/link";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [user, setUser] = useState({
@@ -8,13 +10,32 @@ const Register = () => {
     lastName: "",
     email: "",
     password: "",
+    age: "",
+    phone: "",
   });
-  const changeValue = (e) => {
+  const changeValue = async (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
-  const submitData = (e) => {
+  const submitData = async (e) => {
     e.preventDefault();
+    try {
+      const data = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        password: user.password,
+        age: user.age,
+        phone: user.phone,
+      };
+      const result = await axios.post(
+        `http://localhost:7000/api/v1/register`,
+        data
+      );
+      toast.success("You have registered successfully");
+    } catch (error) {
+      toast.error("Registration failed");
+    }
   };
   return (
     <div>
@@ -88,6 +109,42 @@ const Register = () => {
                 placeholder="Choose your password"
                 onChange={changeValue}
                 value={user.password}
+                area-hidden
+                className="w-full block md:w-fit outline-none rounded bg-gray-300 py-2 px-4 text-gray-500"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="age"
+                className="w-full text-base block md:text-lg text-gray-500 font-medium"
+              >
+                Age:
+              </label>
+              <input
+                type="age"
+                name="age"
+                id="password"
+                placeholder="Choose your password"
+                onChange={changeValue}
+                value={user.age}
+                area-hidden
+                className="w-full block md:w-fit outline-none rounded bg-gray-300 py-2 px-4 text-gray-500"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="password"
+                className="w-full text-base block md:text-lg text-gray-500 font-medium"
+              >
+                Phone:
+              </label>
+              <input
+                type="phone"
+                name="phone"
+                id="password"
+                placeholder="Choose your password"
+                onChange={changeValue}
+                value={user.phone}
                 area-hidden
                 className="w-full block md:w-fit outline-none rounded bg-gray-300 py-2 px-4 text-gray-500"
               />

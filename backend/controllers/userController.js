@@ -1,6 +1,9 @@
-const  {userModel}  = require("../Models/models")
+// const userModel = require("../Models/models")
+
 const bcyrpt= require('bcrypt')
 const jwt = require('jsonwebtoken')
+const userModel = require('../Models/userModel')
+const nodemailer = require('nodemailer')
 
 exports.register = async(req, res) =>{
     const {firstName, lastName, email, password, age, phone}  = req.body
@@ -13,7 +16,7 @@ exports.register = async(req, res) =>{
             return res.status(500).json({message: "Email already exist"})
         }
         const hashedPassword = await bcyrpt.hash(password, 10)
-        const registerUser = await userModel.create({
+        const registerUser = await  userModel.create({
             firstName: firstName,
             lastName: lastName,
             email: email,
@@ -89,8 +92,23 @@ exports.resetEmail = async(req, res) =>{
         const secret = user._id + process.env.JWT_SECRET
         const token = jwt.sign({USERID: user._id}, secret,{expiresIn: '30min'})
 
-        const link = `http://127.0.0.1:7000/api/v1/emailResetPassword/${user._id}/${token}`
-        console.log(link)
+        // const link =
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+
+            auth:{
+                user: 'raheelmusa7@gmail.com',
+                pass: "ndfv bdjy ryzx rdlh"
+            }
+        })
+        let mailOption = {
+            from: 'raheelmusa7@gmail.com',
+            to: user.email,
+            subject: 'Reset password link',
+            text:  `http://127.0.0.1:7000/api/v1/emailResetPassword/${user._id}/${token}`
+        }
+        transporter.sendMail(mailOption)
+        // console.log(link)
         return res.status(201).json({
             success: true,
             message: "Reset password email sent... please check your email"
@@ -100,4 +118,3 @@ exports.resetEmail = async(req, res) =>{
         return res.status(401).json({message: "An error occur while reseting your password", error: error.message})
     }
 }
-exports.resetPassword = async(req, res) =>{}

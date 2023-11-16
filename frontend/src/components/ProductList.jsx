@@ -21,7 +21,7 @@ const ProductList = () => {
     setPage(newPage);
   };
   const handleCategoryChanged = (selectedCategory) => {
-    setCategory(...category, selectedCategory);
+    // setCategory(...category, selectedCategory);
   };
   // const handleMinPriceChange = (newMinPrice) => {
   //   setMinPrice(newMinPrice);

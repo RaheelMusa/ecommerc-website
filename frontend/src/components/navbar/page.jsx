@@ -79,7 +79,7 @@ const links = [
 const Navbar = () => {
   return (
     <>
-      <header className=" ">
+      <header className="">
         <div className=" px-8 text-sm flex justify-between items-center py-3 border-b-2">
           <div>
             <p className="font-bold md:block hidden">
@@ -111,20 +111,20 @@ const Navbar = () => {
                   <Link href="">Cart</Link>
                 </li>
                 <li className="hover:text-red-400 px-5 my-2">
-                  <Link href="">Login</Link>
+                  <Link href="/login">Login</Link>
                 </li>
               </ul>
             </div>
           </div>
         </div>
-        <div className="py-6 container mx-auto items-center  bg-white md:grid md:grid-cols-3 gap-10  flex-wrap">
-          <div className="col-span-3 md:col-span-1 w-full md:w-auto">
-            <Link href="/" className="  w-auto md:w-48">
+        <div className="py-6 container mx-auto items-center bg-white md:grid md:grid-cols-3 gap-10  flex-wrap">
+          <div className="col-span-3  ml-5 md:col-span-1 w-full md:w-auto">
+            <Link href="/" className=" w-auto  ">
               <Image
                 src="/logo.png"
                 alt="Logo Image"
-                width={100}
-                height={100}
+                width={80}
+                height={50}
                 // className="h-100 w-100"
               ></Image>
               logo image

@@ -1,6 +1,10 @@
-const  {userModel}  = require("../Models/models")
-const bcyrpt= require('bcrypt')
+// const userModel = require("../Models/models")
+
+const bcrypt= require('bcrypt')
 const jwt = require('jsonwebtoken')
+const userModel = require('../Models/userModel')
+const nodemailer = require('nodemailer')
+const { transporter } = require('../middleware/nodemailer')
 
 exports.register = async(req, res) =>{
     const {firstName, lastName, email, password, age, phone}  = req.body
@@ -12,8 +16,8 @@ exports.register = async(req, res) =>{
         if(existingUser){
             return res.status(500).json({message: "Email already exist"})
         }
-        const hashedPassword = await bcyrpt.hash(password, 10)
-        const registerUser = await userModel.create({
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const registerUser = await  userModel.create({
             firstName: firstName,
             lastName: lastName,
             email: email,
@@ -42,7 +46,7 @@ exports.login = async(req, res) =>{
         if(!existingUser){
             return res.status(404).json({message: "User not found."})
         }
-        const matchedPassword = await bcyrpt.compare(password, existingUser.password)
+        const matchedPassword = await bcrypt.compare(password, existingUser.password)
         if(!matchedPassword){
             return res.status(500).json({message: "Invalid Credentials"})
         }
@@ -63,12 +67,12 @@ exports.changePassword = async(req, res) =>{
         }
         
         const user = req.user
-        const verifyPassword = await bcyrpt.compare(oldPassword, user.password)
+        const verifyPassword = await bcrypt.compare(oldPassword, user.password)
         if(!verifyPassword){
             return res.status(500).json({message: "password didn't matched"})
         }
-        const newHashedPassword = await bcyrpt.hash(newPassword, 10)
-        await userModel.findByIdAndDelete(user._id, {$set: {password: newHashedPassword}})
+        const newHashedPassword = await bcrypt.hash(newPassword, 10)
+        await userModel.findByIdAndUpdate(user._id, {$set: {password: newHashedPassword}})
         return res.status(201).json({message: "Our password has been change successfully"})
 
 
@@ -76,7 +80,7 @@ exports.changePassword = async(req, res) =>{
         return res.status(500).json({message: "An error occur while changing your password", error: error.message})
     }
 }
-exports.resetEmail = async(req, res) =>{
+exports.sendMail = async(req, res) =>{
     try {
         const {email}= req.body
         if(!email){
@@ -89,7 +93,16 @@ exports.resetEmail = async(req, res) =>{
         const secret = user._id + process.env.JWT_SECRET
         const token = jwt.sign({USERID: user._id}, secret,{expiresIn: '30min'})
 
-        const link = `http://127.0.0.1:7000/api/v1/emailResetPassword/${user._id}/${token}`
+        const link = `http://127.0.0.1:7000/api/v1/resetemailsend/${user._id}/${token}`
+     const message = `We have received reset password request. Link the link below to reset your password. \n\n ${link}.\n\n Link will be expired in 30 minutes`
+        let mailOption = {
+            from: process.env.EMAIL_FROM,
+            to: user.email,
+            subject: '<beeta> ..Reset password link',
+            // text:  `http://127.0.0.1:7000/api/v1/emailResetPassword/${user._id}/${token}`
+            text: message 
+        }
+       await transporter.sendMail(mailOption)
         console.log(link)
         return res.status(201).json({
             success: true,
@@ -100,4 +113,26 @@ exports.resetEmail = async(req, res) =>{
         return res.status(401).json({message: "An error occur while reseting your password", error: error.message})
     }
 }
-exports.resetPassword = async(req, res) =>{}
+exports.resetPassword = async(req, res ) =>{
+    const { password, confirmPassword } = req.body
+    const {id, token} = req.params
+    const user = await userModel.findById(id)
+    if(!user){
+        return res.status(400).json({message: "User is not available"})
+    }
+    const new_secret = user._id + process.env.JWT_SECRET
+    try {
+        if(!password || !confirmPassword){
+            return res.status(400).json({message: "All field required"})
+        }
+        if(password !== confirmPassword){
+            return res.status(400).json({message: "Password didn't matched.."})
+        }
+        jwt.verify(token, new_secret)
+        const newHashedPassword = await bcrypt.hash(password, 10)
+        await userModel.findByIdAndUpdate(user._id, {$set: {password: newHashedPassword}})
+        return res.status(201).json({message: "Your password has been reset successfully"})
+    } catch (error) {
+        return res.status(500).json({message: "An error occur while resetting your password"})
+    }
+}

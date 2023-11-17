@@ -22,7 +22,7 @@ const ProductList = () => {
     setPage(newPage);
   };
   const handleCategoryChanged = (selectedCategory) => {
-    setCategory(...category, selectedCategory);
+    // setCategory(...category, selectedCategory);
   };
   // const handleMinPriceChange = (newMinPrice) => {
   //   setMinPrice(newMinPrice);
@@ -79,8 +79,6 @@ const ProductList = () => {
   };
   const handleResetFilter = () => {
     setRating("");
-    setMinPrice("");
-    setMaxPrice("");
   };
   useEffect(() => {
     fetchProduct();

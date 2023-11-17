@@ -4,24 +4,12 @@ const Category = ({ onCategoryChanged }) => {
   const [category, setCategory] = useState("");
   const [checked, setchecked] = useState("");
 
-  const [selectedCategories, setSelectedCategories] = useState([]);
-
   const handleCategoryChanged = (e) => {
-    const value = e.target.value;
-    const updatedCategories = selectedCategories.includes(value)
-      ? selectedCategories.filter((category) => category !== value)
-      : [...selectedCategories, value];
-
-    setSelectedCategories(updatedCategories);
-    onCategoryChanged(updatedCategories);
+    const categoryValue = e.target.value;
+    if (categoryValue) {
+      onCategoryChanged(categoryValue);
+    }
   };
-  // const handleCategoryChanged = (e) => {
-
-  //   const categoryValue = e.target.value;
-  //   if (categoryValue) {
-  //     onCategoryChanged(categoryValue);
-  //   }
-  // };
 
   return (
     <>

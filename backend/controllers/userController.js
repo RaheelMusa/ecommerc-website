@@ -71,7 +71,7 @@ exports.changePassword = async(req, res) =>{
             return res.status(500).json({message: "password didn't matched"})
         }
         const newHashedPassword = await bcyrpt.hash(newPassword, 10)
-        await userModel.findByIdAndDelete(user._id, {$set: {password: newHashedPassword}})
+        await userModel.findByIdAndUpdate(user._id, {$set: {password: newHashedPassword}})
         return res.status(201).json({message: "Our password has been change successfully"})
 
 

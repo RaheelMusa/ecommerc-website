@@ -6,14 +6,16 @@ exports.checkUserAuth = async(req,res, next) =>{
     
     const { authorization } = req.headers
     if(!authorization || !authorization.startsWith('Bearer')){
-        return res.status(404).json({message: "Unauthorized User"})
+        return res.status(401).json({message: "Unauthorized User"})
     }
     const token = authorization.split(" ")[1]
-    const { id } = jwt.verify(token, process.env.JWT_SECRET)
-    const user = await userModel.findById(id)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const { id } =  decoded
+    const user = await userModel.findOne({ _id: id })
+
     console.log(token)
     if(!user){
-        return res.status(404).json({message: "User not found"})
+        return res.status(401).json({message: "User not found"})
     }
     req.user = user
     console.log(req.user)

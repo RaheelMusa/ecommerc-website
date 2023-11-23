@@ -2,15 +2,16 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import axios from "axios";
-import { toast, useToast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-const resetPassword = () => {
+const SendResetEmail = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState({
     email: "",
   });
-  const [loading, setLoading] = useState(false);
-  const changeValue = async (e) => {
+  const changeValue = (e) => {
     const { name, value } = e.target;
     setEmail({ ...email, [name]: value });
   };
@@ -20,13 +21,18 @@ const resetPassword = () => {
       const data = {
         email: email.email,
       };
-      const result = await axios.post(
-        "http://localhost:7000/api/v1/emailResetPassword",
+      const response = await axios.post(
+        "http://localhost:7000/api/v1/resetemailsend",
         data
       );
-      toast.success("Reset email sent successfully");
+      if (response.status === 201) {
+        router.push("/sendEmail");
+        toast.success("Reset email sent successfully");
+      } else {
+        toast.error("failed to sent reset email");
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("failed to send ");
     }
   };
@@ -61,13 +67,12 @@ const resetPassword = () => {
         <p className="text-xl font-medium">
           Back to
           <Link className="text-blue-500" href="/login">
-            {" "}
-            login{" "}
-          </Link>{" "}
+            login
+          </Link>
         </p>
       </div>
     </div>
   );
 };
 
-export default resetPassword;
+export default SendResetEmail;

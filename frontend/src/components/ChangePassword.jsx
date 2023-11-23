@@ -26,7 +26,7 @@ const ChangePassword = () => {
         confirmPassword: password.confirmPassword,
       };
       const result = await axios.patch(
-        `http://localhost:7000/api/v1/ChangePassword`,
+        `http://localhost:7000/api/v1/changePassword/${user._id}/${token}`,
         data
       );
       toast.success("Your password has been changed successfully");

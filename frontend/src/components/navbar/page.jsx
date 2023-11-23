@@ -1,7 +1,17 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { PiListBold } from "react-icons/pi";
+import { useEffect, useState } from "react";
+
+const getUser = () => {
+  if (typeof window !== "undefined") {
+    const storedUser = localStorage.getItem("user");
+
+    return storedUser ? JSON.parse(storedUser) : null;
+  }
+  return null;
+};
+
 const links = [
   {
     id: 1,
@@ -77,10 +87,64 @@ const links = [
 ];
 
 const Navbar = () => {
+  // const isClientView = false;
+  // const isAdminView = true;
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState(getUser());
+  const handleLogout = () => {
+    setUser(null);
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  };
+  useEffect(() => {
+    // const getUser = () => {
+    //   const storedUser = localStorage.getItem("user");
+    //   if (storedUser) {
+    //     const currentUser = JSON.parse(storedUser);
+    //     setUser(currentUser);
+    //     setIsLoggedIn(true);
+    //   }
+    //   setLoading(false);
+    // };
+    // getUser();
+
+    const handleScroll = () => {
+      const halfPoint = window.innerHeight / 2;
+      setScrolled(window.scrollY > halfPoint);
+    };
+    document.addEventListener("scroll", handleScroll);
+
+    const fetchData = () => {
+      const storedUser = getUser();
+
+      setUser(storedUser);
+
+      setLoading(false);
+    };
+
+    fetchData();
+    return () => {
+      document.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
-      <header className="">
-        <div className=" px-8 text-sm flex justify-between items-center py-3 border-b-2">
+      <header
+        className={`${
+          scrolled ? " bg-opacity-40 bg-gray-200  fixed  top-0  w-full" : ""
+        } transition-all duration-300 z-10`}
+      >
+        <div
+          className={`${
+            scrolled ? "hidden top-0" : "block"
+          } px-8 text-sm flex justify-between items-center py-3 border-b-2`}
+        >
           <div>
             <p className="font-bold md:block hidden">
               Free Delivery:
@@ -98,26 +162,45 @@ const Navbar = () => {
               <option value="gbr">GBR - British pound</option>
               <option value="ind">IND - Indian Rupies </option>
             </select>
+            <div>
+              <h3 className="px-2 py-1 bg-gray-100 rounded-sm font-medium">
+                {getUser()?.email}
+              </h3>
+            </div>
             <div className="cursor-pointer relative group">
               <p>My account</p>
-              <ul className="hidden group-hover:block absolute left-0  group-hover:shadow-2xl  group-hover:duration-700 delay-800 group-hover:transition-all  ease-in-out">
-                <li className="hover:text-red-400 px-5 my-2">
-                  <Link href="">Checklist</Link>
-                </li>
-                <li className="hover:text-red-400 px-5 my-2">
-                  <Link href="">Wishlist</Link>
-                </li>
-                <li className="hover:text-red-400 px-5 my-2">
-                  <Link href="">Cart</Link>
-                </li>
-                <li className="hover:text-red-400 px-5 my-2">
-                  <Link href="/login">Login</Link>
-                </li>
-              </ul>
+              {getUser() ? (
+                <ul className="hidden group-hover:block absolute left-0 z-10 bg-gray-100 pt-3  group-hover:shadow-2xl  group-hover:duration-700 delay-800 group-hover:transition-all  ease-in-out">
+                  <li className="hover:text-red-400 px-3  my-2 text-xl">
+                    <Link href="">Checklist</Link>
+                  </li>
+                  <li className="hover:text-red-400 px-3  my-2 text-xl">
+                    <Link href="">Wishlist</Link>
+                  </li>
+                  <li className="hover:text-red-400 px-3  my-2 text-xl">
+                    <Link href="">Cart</Link>
+                  </li>
+
+                  <li className="hover:text-red-400  my-2 w-full text-xl font-semibold px-2 overflow-hidden hover:bg-gray-200 rounded">
+                    <Link href="/login" onClick={handleLogout}>
+                      Log out
+                    </Link>
+                  </li>
+                </ul>
+              ) : (
+                <ul className="hidden group-hover:block absolute left-0  group-hover:shadow-2xl  group-hover:duration-700 delay-800 group-hover:transition-all pb-10  ease-in-out w-full">
+                  <li className="hover:text-red-400  my-2 w-full text-xl font-semibold px-2 overflow-hidden hover:bg-gray-200 rounded">
+                    <Link href="/login">Login</Link>
+                  </li>
+                  <li className="hover:text-red-400  my-2 text-xl font-semibold px-2 overflow-hidden hover:bg-gray-200 rounded">
+                    <Link href="/register">Sign up</Link>
+                  </li>
+                </ul>
+              )}
             </div>
           </div>
         </div>
-        <div className="py-6 container mx-auto items-center bg-white md:grid md:grid-cols-3 gap-10  flex-wrap">
+        <div className="py-6 container mx-auto items-center bg-white  md:grid md:grid-cols-3 gap-10  flex-wrap">
           <div className="col-span-3  ml-5 md:col-span-1 w-full md:w-auto">
             <Link href="/" className=" w-auto  ">
               <Image
@@ -127,7 +210,6 @@ const Navbar = () => {
                 height={50}
                 // className="h-100 w-100"
               ></Image>
-              logo image
             </Link>
           </div>
 

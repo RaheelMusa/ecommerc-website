@@ -1,16 +1,24 @@
 import { useState } from "react";
 
-const Category = ({ onCategoryChanged }) => {
-  const [category, setCategory] = useState("");
-  const [checked, setchecked] = useState("");
+const Category = ({ onCategoryChanged, selectedCategory }) => {
+  // const handleCategoryChanged = (e) => {
+  //   const categoryValue = e.target.value;
+  //   if (e.target.checked) {
+  //     setCategory((prevCatergories) => [...prevCatergories, categoryValue]);
+  //   } else {
+  //     setCategory((prevCatergories) =>
+  //       prevCatergories.filter((category) => category !== categoryValue)
+  //     );
+  //   }
+  //   onCategoryChanged(category);
+  // };
 
   const handleCategoryChanged = (e) => {
-    const categoryValue = e.target.value;
-    if (categoryValue) {
-      onCategoryChanged(categoryValue);
-    }
-  };
+    const selectedCategory = e.target.value;
+    const isChecked = e.target.checked;
 
+    onCategoryChanged(selectedCategory, isChecked);
+  };
   return (
     <>
       <div className="bg-gray-100  px-5 py-2 h-screen rounded leading-10">
@@ -23,6 +31,7 @@ const Category = ({ onCategoryChanged }) => {
               value="Shoes"
               id="Shoes"
               onChange={handleCategoryChanged}
+              checked={selectedCategory.includes("Shoes")}
             />
             <label htmlFor="Shoes" className="hover:text-gray-600">
               Shoes
@@ -35,6 +44,7 @@ const Category = ({ onCategoryChanged }) => {
               value="kid play"
               id="kid play"
               onChange={handleCategoryChanged}
+              checked={selectedCategory.includes("kid play")}
             />
             <label htmlFor="kid play" className="hover:text-gray-600">
               Kid Play
@@ -47,6 +57,7 @@ const Category = ({ onCategoryChanged }) => {
               value="baby clothes"
               id="babyClothes"
               onChange={handleCategoryChanged}
+              checked={selectedCategory.includes("baby clothes")}
             />
             <label htmlFor="babyClothes" className="hover:text-gray-600">
               Baby Clothes
@@ -59,6 +70,7 @@ const Category = ({ onCategoryChanged }) => {
               value="electronics"
               id="electronics"
               onChange={handleCategoryChanged}
+              checked={selectedCategory.includes("electronics")}
             />
             <label htmlFor="electronics" className="hover:text-gray-600">
               Electronics
@@ -71,6 +83,7 @@ const Category = ({ onCategoryChanged }) => {
               value="Men shoes"
               id="menShoes"
               onChange={handleCategoryChanged}
+              checked={selectedCategory.includes("electornics")}
             />
             <label htmlFor="menShoes">Men shoes</label>
           </div>
@@ -81,6 +94,7 @@ const Category = ({ onCategoryChanged }) => {
               value="Women shoes"
               id="womenShoes"
               onChange={handleCategoryChanged}
+              checked={selectedCategory.includes("women shoes")}
             />
             <label htmlFor="womenShoes" className="hover:text-gray-600">
               Women shoes
@@ -93,6 +107,7 @@ const Category = ({ onCategoryChanged }) => {
               value="bottle"
               id="bottles"
               onChange={handleCategoryChanged}
+              checked={selectedCategory.includes("bottle")}
             />
             <label htmlFor="bottles" className="hover:text-gray-600">
               Bottles
@@ -105,6 +120,7 @@ const Category = ({ onCategoryChanged }) => {
               value="Clothes"
               id="womenDress"
               onChange={handleCategoryChanged}
+              checked={selectedCategory.includes("Clothes")}
             />
             <label htmlFor="womenDress" className="hover:text-gray-600">
               Women dress

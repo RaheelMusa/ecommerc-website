@@ -16,12 +16,20 @@ const ProductList = () => {
   const [category, setCategory] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState([]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
   };
-  const handleCategoryChanged = (selectedCategory) => {
-    // setCategory(...category, selectedCategory);
+  const handleCategoryChanged = (category, isChecked) => {
+    setSelectedCategory((prevCategories) =>
+      isChecked
+        ? [...prevCategories, category]
+        : prevCategories.filter((c) => c !== category)
+    );
+
+    // setCategory(selectedCategory);
   };
   // const handleMinPriceChange = (newMinPrice) => {
   //   setMinPrice(newMinPrice);
@@ -34,18 +42,31 @@ const ProductList = () => {
   //   setRating(selectRating);
   // };
   const fetchProduct = async () => {
-    const params = { page, pageSize, category, from: minPrice, to: maxPrice };
+    setIsLoading(true);
+    try {
+      const params = {
+        page,
+        pageSize,
+        category: selectedCategory.join(" , "),
+        from: minPrice,
+        to: maxPrice,
+      };
 
-    if (rating) {
-      params.rating = rating;
+      if (rating) {
+        params.rating = rating;
+      }
+      const data = await axios.get(`http://localhost:7000/api/v1/products`, {
+        params,
+      });
+      const { user, totalPages } = data.data;
+      console.log(data.data.user);
+      setProduct(user);
+      setTotalpages(totalPages);
+    } catch (error) {
+      console.log("Error fetching Product:", error);
+    } finally {
+      setIsLoading(false);
     }
-    const data = await axios.get(`http://localhost:7000/api/v1/products`, {
-      params,
-    });
-    const { user, totalPages } = data.data;
-    console.log(data.data.user);
-    setProduct(user);
-    setTotalpages(totalPages);
   };
 
   const removeProduct = async (_id) => {
@@ -69,12 +90,10 @@ const ProductList = () => {
   };
   const handleResetFilter = () => {
     setRating("");
-    setMinPrice("");
-    setMaxPrice("");
   };
   useEffect(() => {
     fetchProduct();
-  }, [pageSize, rating, page, category, minPrice, maxPrice]);
+  }, [pageSize, rating, page, selectedCategory, minPrice, maxPrice]);
   return (
     <div className="container mx-auto">
       <div className="flex items-center justify-between px-5">
@@ -108,15 +127,17 @@ const ProductList = () => {
           </div>
           <Category
             onCategoryChanged={handleCategoryChanged}
-            category={category}
+            selectedCategory={selectedCategory}
           />
         </div>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 px-5">
-          {product
-            .filter((productList) =>
-              length === 0 ? true : category.includes(productList.category)
-            )
-            .map((productList) => {
+          {isLoading ? (
+            <p className="absolute top-[60%] left-[50%] text-8xl font-bold">
+              Loading product...
+            </p>
+          ) : (
+            product.map((productList) => {
               return (
                 <div
                   key={productList._id}
@@ -161,7 +182,8 @@ const ProductList = () => {
                   </button>
                 </div>
               );
-            })}
+            })
+          )}
         </div>
         <div className="flex items-center justify-center my-3">
           <button

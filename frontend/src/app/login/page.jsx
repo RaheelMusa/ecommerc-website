@@ -26,7 +26,10 @@ const Login = () => {
         `http://localhost:7000/api/v1/login`,
         data
       );
+      localStorage.setItem("user", JSON.stringify(result.data.user));
+      localStorage.setItem("token", JSON.stringify(result.data.token));
       toast.success("You logged in successfully");
+      router.refresh();
       router.push("/");
     } catch (error) {
       console.log(error);
@@ -74,7 +77,7 @@ const Login = () => {
             </div>
           </div>
           <div className="text-blue-500 cursor-pointer font-medium hover:text-blue-300 hover:duration-300 hover:ease-in-out w-fit">
-            <Link href="/resetPassword">Forget your password?</Link>
+            <Link href="/email">Forget your password?</Link>
           </div>
           <button className="bg-green-500 px-4 py-3 rounded-md font-medium text-white text-center block mx-auto hover:bg-green-300 hover:duration-500 hover:text-blue-500 ease-in-out delay-75">
             Login

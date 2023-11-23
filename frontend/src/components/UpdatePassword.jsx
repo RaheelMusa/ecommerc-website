@@ -14,7 +14,7 @@ const updatePassword = () => {
   });
   const changeValue = async (e) => {
     const { name, value } = e.target;
-    setEmail({ ...email, [name]: value });
+    setPassword({ ...email, [name]: value });
   };
   const submitData = async (e) => {
     e.preventDefault();

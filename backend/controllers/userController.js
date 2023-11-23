@@ -1,9 +1,33 @@
 // const userModel = require("../Models/models")
 
-const bcyrpt= require('bcrypt')
+const bcrypt= require('bcrypt')
 const jwt = require('jsonwebtoken')
 const userModel = require('../Models/userModel')
-const nodemailer = require('nodemailer')
+const { transporter } = require('../middleware/nodemailer')
+const path = require('path')
+
+exports.get = async(req, res) => {
+    try {
+        const {id, token} = req.params
+        // console(req.params)
+
+        const oldUser = await userModel.findOne({_id: id})
+        if(!oldUser){
+            return res.status(404).json({message: "No User found"})
+        }
+        const secret = await oldUser.password + process.env.JWT_SECRET
+        const verifyToken = await jwt.verify(token, secret)
+        if(verifyToken){
+            return res.render(path.join(__dirname, '../views/reset-password.ejs'), {
+                userId: id,
+                token: token
+            })
+        }
+        return res.status(201).json({success: true})
+    } catch (error) {
+        return res.status(500).json({message: "An error occur while getting users", message: error.message})
+    }
+}
 
 exports.register = async(req, res) =>{
     const {firstName, lastName, email, password, age, phone}  = req.body
@@ -15,7 +39,7 @@ exports.register = async(req, res) =>{
         if(existingUser){
             return res.status(500).json({message: "Email already exist"})
         }
-        const hashedPassword = await bcyrpt.hash(password, 10)
+        const hashedPassword = await bcrypt.hash(password, 10)
         const registerUser = await  userModel.create({
             firstName: firstName,
             lastName: lastName,
@@ -45,7 +69,7 @@ exports.login = async(req, res) =>{
         if(!existingUser){
             return res.status(404).json({message: "User not found."})
         }
-        const matchedPassword = await bcyrpt.compare(password, existingUser.password)
+        const matchedPassword = await bcrypt.compare(password, existingUser.password)
         if(!matchedPassword){
             return res.status(500).json({message: "Invalid Credentials"})
         }
@@ -66,11 +90,11 @@ exports.changePassword = async(req, res) =>{
         }
         
         const user = req.user
-        const verifyPassword = await bcyrpt.compare(oldPassword, user.password)
+        const verifyPassword = await bcrypt.compare(oldPassword, user.password)
         if(!verifyPassword){
             return res.status(500).json({message: "password didn't matched"})
         }
-        const newHashedPassword = await bcyrpt.hash(newPassword, 10)
+        const newHashedPassword = await bcrypt.hash(newPassword, 10)
         await userModel.findByIdAndUpdate(user._id, {$set: {password: newHashedPassword}})
         return res.status(201).json({message: "Our password has been change successfully"})
 
@@ -79,7 +103,7 @@ exports.changePassword = async(req, res) =>{
         return res.status(500).json({message: "An error occur while changing your password", error: error.message})
     }
 }
-exports.resetEmail = async(req, res) =>{
+exports.sendMail = async(req, res) =>{
     try {
         const {email}= req.body
         if(!email){
@@ -92,23 +116,17 @@ exports.resetEmail = async(req, res) =>{
         const secret = user._id + process.env.JWT_SECRET
         const token = jwt.sign({USERID: user._id}, secret,{expiresIn: '30min'})
 
-        // const link =
-        let transporter = nodemailer.createTransport({
-            service: 'gmail',
-
-            auth:{
-                user: 'raheelmusa7@gmail.com',
-                pass: "ndfv bdjy ryzx rdlh"
-            }
-        })
+        const link = `http://127.0.0.1:7000/api/v1/resetemailsend/${user._id}/${token}`
+     const message = `We have received reset password request. Link the link below to reset your password. \n\n ${link}.\n\n Link will be expired in 30 minutes`
         let mailOption = {
-            from: 'raheelmusa7@gmail.com',
+            from: process.env.EMAIL_FROM,
             to: user.email,
-            subject: 'Reset password link',
-            text:  `http://127.0.0.1:7000/api/v1/emailResetPassword/${user._id}/${token}`
+            subject: '<beeta> ..Reset password link',
+            // text:  `http://127.0.0.1:7000/api/v1/emailResetPassword/${user._id}/${token}`
+            text: message 
         }
-        transporter.sendMail(mailOption)
-        // console.log(link)
+       await transporter.sendMail(mailOption)
+        console.log(link)
         return res.status(201).json({
             success: true,
             message: "Reset password email sent... please check your email"
@@ -116,5 +134,28 @@ exports.resetEmail = async(req, res) =>{
         
     } catch (error) {
         return res.status(401).json({message: "An error occur while reseting your password", error: error.message})
+    }
+}
+exports.resetPassword = async(req, res ) =>{
+    const { password, confirmPassword } = req.body
+    const {id, token} = req.params;
+    const user = await userModel.findById(id)
+    if(!user){
+        return res.status(400).json({message: "User is not available"})
+    }
+    const new_secret = user._id + process.env.JWT_SECRET
+    try {
+        if(!password || !confirmPassword){
+            return res.status(400).json({message: "All field required"})
+        }
+        if(password !== confirmPassword){
+            return res.status(400).json({message: "Password didn't matched.."})
+        }
+        jwt.verify(token, new_secret)
+        const newHashedPassword = await bcrypt.hash(password, 10)
+        await userModel.findByIdAndUpdate(user._id, {$set: {password: newHashedPassword}})
+        return res.status(201).json({message: "Your password has been reset successfully"})
+    } catch (error) {
+        return res.status(500).json({message: "An error occur while resetting your password"})
     }
 }

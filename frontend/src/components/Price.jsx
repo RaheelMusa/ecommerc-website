@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 
 const PricePage = ({ onPriceFilterApply, onResetFilter }) => {
+  const[isLoading, setIsLoading] = useState(false)
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
@@ -38,12 +39,9 @@ const PricePage = ({ onPriceFilterApply, onResetFilter }) => {
 
       {/* Filter search button */}
 
-      <button
-        onClick={handleFilterApply}
-        className="w-full bg-blue-400 p-2 rounded-md hover:bg-blue-600 text-white hover:duration-300 hover:ease-in-out delay-100"
-      >
-        Search
-      </button>
+          {isLoading === true ? ( "Loading...." ) : ( <button onClick={handleFilterApply} className='w-full bg-blue-400 p-2 rounded-md hover:bg-blue-600 text-white hover:duration-300 hover:ease-in-out delay-100'>Search</button> ) }
+
+         
     </div>
   );
 };

@@ -200,7 +200,7 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-        <div className="py-6 container mx-auto items-center bg-white  md:grid md:grid-cols-3 gap-10  flex-wrap">
+        <div className="py-6  mx-auto items-center bg-white  md:grid md:grid-cols-3 gap-10  flex-wrap">
           <div className="col-span-3  ml-5 md:col-span-1 w-full md:w-auto">
             <Link href="/" className=" w-auto  ">
               <Image

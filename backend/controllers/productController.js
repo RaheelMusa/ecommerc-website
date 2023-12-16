@@ -44,6 +44,19 @@ exports.getProduct = async (req, res, next) => {
  return res.status(500).json({message:"An error occur while getting product", error: error.message})   
 }
 }
+exports.singleProduct = async ( req, res ) =>{
+    try {
+        const data = await productModel.findById(req.params.id);
+        if(!data){
+            return res.status(404).json({
+                message: "No data found with the current id"
+            })
+        }
+        return res.status(201).json({success: true, data: data})
+    } catch (error) {
+        return res.status(500).json({message: "An error occur while getting single products", error: error.message})
+    }
+}
 exports.getImage = async (req, res )=> {
     try {
         let { id } = req.params
@@ -86,8 +99,11 @@ exports.createProduct = async(req, res) => {
 exports.updateProduct = async(req, res )=> {
     try {
     const { id } = req.params
+    let updateProductData = req.body
     const  body  = req.body
-
+if(req.file){
+    updateProductData = req.file.buffer
+}
     const data= await productModel.findByIdAndUpdate(id, body, {new: true})
     if(!data){
         return res.status(404).json({message: "No data available", error: error.message})

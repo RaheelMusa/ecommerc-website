@@ -1,10 +1,13 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 const Register = () => {
+
+  const router = useRouter()
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -33,6 +36,7 @@ const Register = () => {
         data
       );
       toast.success("You have registered successfully");
+      router.push('/login')
     } catch (error) {
       toast.error("Registration failed");
     }

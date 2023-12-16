@@ -117,7 +117,7 @@ exports.sendMail = async(req, res) =>{
         const secret = user.password + process.env.JWT_SECRET
         const token = jwt.sign({USERID: user._id}, secret,{expiresIn: '30min'})
 
-        const link = `http://127.0.0.1:7000/api/v1/resetpassword/${user._id}/${token}`
+        const link = `http://localhost:3000/resetPassword/${user._id}/${token}`
      const message = `We have received reset password request. Link the link below to reset your password. \n\n ${link}.\n\n Link will be expired in 30 minutes`
         let mailOption = {
             from: process.env.EMAIL_FROM,

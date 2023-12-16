@@ -3,11 +3,16 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
+import { CiEdit } from 'react-icons/ci'
 import Category from "./Category";
 import RatingFilter from "./Rating";
 import PricePage from "./Price";
+import { useParams, useRouter } from "next/navigation";
 
 const ProductList = () => {
+  const params = useParams()
+  const id = params.id
+     const router = useRouter()
   const [product, setProduct] = useState([]);
   const [page, setPage] = useState(1);
   const [rating, setRating] = useState("");
@@ -140,9 +145,11 @@ const ProductList = () => {
             product.map((productList) => {
               return (
                 <div
+
                   key={productList._id}
                   className="border p-5 flex flex-col gap-3"
                 >
+                  <Link href={`/products/${productList._id}`}>
                   {true ? (
                     <img
                       src={productList.image}
@@ -155,6 +162,7 @@ const ProductList = () => {
                       src="https://dummyimage.com/424x264"
                     ></img>
                   )}
+                  </Link>
                   <p className="text-sm text-gray-400">
                     {productList.category}
                   </p>
@@ -170,12 +178,20 @@ const ProductList = () => {
                   </p>
                   <div className="flex flex-wrap justify-between">
                     <p>Rating: {productList.rating}</p>
-                    <button
-                      onClick={() => removeProduct(productList._id)}
-                      className="w-fit hover:text-red-500 cursor-pointer"
-                    >
-                      <FaTrash size={20} />
-                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => removeProduct(productList._id)}
+                        className="w-fit hover:text-red-500 cursor-pointer"
+                        >
+                        <FaTrash size={20} />
+                      </button>
+                      <button
+                           onClick={() => router.push(`/editproduct/${productList._id}`)}
+                        className="w-fit hover:text-red-500 cursor-pointer"
+                      >
+                        <CiEdit size={20} />
+                      </button>
+                    </div>
                   </div>
                   <button className="bg-green-500 rounded text-white font-medium hover:bg-green-600 py-3">
                     Add to cart{" "}

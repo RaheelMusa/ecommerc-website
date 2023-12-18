@@ -167,7 +167,7 @@ const Navbar = () => {
                 {getUser()?.email}
               </h3>
             </div>
-            <div className="cursor-pointer relative group">
+            <div className="cursor-pointer relative group z-10">
               <p>My account</p>
               {getUser() ? (
                 <ul className="hidden group-hover:block absolute left-0 z-10 bg-gray-100 pt-3  group-hover:shadow-2xl  group-hover:duration-700 delay-800 group-hover:transition-all  ease-in-out">
@@ -213,9 +213,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* <span className=" md:hidden">
-              <PiListBold size={30} color="red" />
-            </span> */}
+        
           <div className="md:flex col-span-3 md:col-span-1 md:flex-wrap gap-10 hidden">
             {links.map((navLink) => {
               return (

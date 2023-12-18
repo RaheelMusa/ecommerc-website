@@ -4,6 +4,7 @@ import './globals.css'
 import { Rubik } from 'next/font/google'
 
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from '@/components/Footer';
 
 const inter = Rubik({ subsets: ['latin'] })
 
@@ -19,12 +20,16 @@ export default function RootLayout({ children }) {
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
       </head>
       <body className={inter.className}>
-      
+      <div className='max-h-screen'>
 
         <ToastContainer />
         <Navbar />
         {children}
         
+
+        <Footer />
+      </div>
+
         </body>
     </html>
   )

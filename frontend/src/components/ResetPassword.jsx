@@ -11,10 +11,9 @@ const ResetPassword = () => {
 
   const params = useParams();
   const router = useRouter();
-  const id = params.id;
-  const token = params.body;
+  
 
-  const [user, setUser] = useState("");
+  const { id, token } = params
   const [userPassword, setUserPassword] = useState({
     password: "",
     confirmPassword: ""
@@ -26,21 +25,18 @@ const ResetPassword = () => {
   const submitData= async(e) =>{
     e.preventDefault()
     try {
-       await axios.post(`http://localhost:7000/api/v1/resetpassword/${id}/${token}`)
+      const data= {
+        password: userPassword.password,
+        confirmPassword: userPassword.confirmPassword
+      }
+        axios.post(`http://localhost:7000/api/v1/resetpassword/${id}/${token}`, data)
        toast.success("password reset successfully")
     } catch (error) {
       console.log(error)
       toast.error("failed to reset your password")
     }
   }
-  useEffect(() => {
-    const resetPassword = async () => {
-      const res = await axios.get(`http://localhost:7000/api/v1/resetPassword/${id}/${token}`);
-      console.log(res);
-      setUser(res);
-    };
-    resetPassword();
-  }, []);
+ 
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
@@ -60,7 +56,7 @@ const ResetPassword = () => {
           <h2 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             Reset Password
           </h2>
-          <form className="mt-4 space-y-4 lg:mt-5 md:space-y-5" action="#" onSubmit={submitData}>
+          <form className="mt-4 space-y-4 lg:mt-5 md:space-y-5"  onSubmit={submitData}>
            
             <div>
               <label
@@ -75,7 +71,7 @@ const ResetPassword = () => {
                 id="password"
                 placeholder="••••••••"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required=""
+                required={true}
                 value={userPassword.password}
                 onChange={changeValue}
               />
